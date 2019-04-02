@@ -1,0 +1,34 @@
+public class UF {
+	private int[] id;
+	private int count;
+
+	public UF(int N) {
+		//初始化，init
+		count = N;
+		id = new int[N];
+		for (int i = 0; i < id.length; i++) {
+			id[i] = i;
+		}
+	}
+
+	public int count() {
+		return count;
+	}
+
+	private int find(int p) {
+		return id[p];
+	}
+
+	public void union(int p, int q) {
+		int pID = find(p);
+		int qID = find(q);
+		if (pID == qID)
+			return;
+		//将所有的相连的节点都更新为新的连接点
+		for (int i = 0; i < id.length; i++) {
+			if(id[i]==pID)
+				id[i] = qID;
+		}
+		count--;
+	}
+}
