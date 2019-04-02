@@ -1,4 +1,4 @@
-//union-find算法
+//union-find算法-quick-find
 
 public class UF {
 	private int[] id;
@@ -15,7 +15,7 @@ public class UF {
 	public int count() {
 		return count;
 	}
-	//quick-find
+	
 	public void union(int p, int q) {
 	//找到根节点
 		int RootP = find(p);
