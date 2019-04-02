@@ -5,6 +5,7 @@ public class UF {
 	private int count;
 	
 	public UF(int N) {
+	//初始化
 		count = N;
 		id = new int[N];
 		for (int i = 0; i < id.length; i++) {
@@ -14,7 +15,9 @@ public class UF {
 	public int count() {
 		return count;
 	}
+	//quick-find
 	public void union(int p, int q) {
+	//找到根节点
 		int RootP = find(p);
 		int RootQ = find(q);
 		if(RootP==RootQ) return;
@@ -23,6 +26,7 @@ public class UF {
 	}
 	public int find(int p) {
 		while(p!=id[p]) {
+			//更新相邻的点
 			id[p] = id[id[p]];
 			p = id[p];
 		}
