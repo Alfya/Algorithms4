@@ -1,0 +1,48 @@
+public class UF{
+	private int[] id;
+	private int[] sz;
+	private int count;
+	public UF(int N) {
+		count = N;
+		id = new int[N];
+		sz = new int[N];
+		for (int i = 0; i < id.length; i++) {
+			id[i] = i;
+		}
+		for (int i = 0; i < sz.length; i++) {
+			sz[i] = 1;
+		}
+	}
+	public int count() {
+		return count;
+	}
+	public boolean isConnected(int p, int q) {
+		return find(p) ==find(q);
+	}
+	private int find(int p) {
+		while(p != id[p]) {
+			//把直接连接到根节点，
+			//检查该点的时候才这么操作，
+			//没有检查到该点，他不会更新他的根节点
+			id[p] = id[id[p]];
+			p = id[p];
+		}
+		return p;
+		
+	}
+	public void union(int p, int q) {
+		int i = find(p);
+		int j = find(q);
+		if(i==j)
+			return;
+		//把小树连接到大树
+		if(sz[i]<sz[j]) {
+			id[i] = j;
+			sz[j]+=sz[i];
+		}else {
+			id[j] = i;
+			sz[i]+=sz[j];
+		}
+		count--;
+	}
+}
