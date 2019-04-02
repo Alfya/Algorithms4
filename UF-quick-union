@@ -26,8 +26,6 @@ public class UF {
 	}
 	public int find(int p) {
 		while(p!=id[p]) {
-			//更新相邻的点
-			//id[p] = id[id[p]];
 			p = id[p];
 		}
 		return p;
