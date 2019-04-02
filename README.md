@@ -3,7 +3,7 @@ http://www.bkjia.com/C_jc/1228709.html
 习题解答
 
 <h2>quick-find<br>
-  <h5>在union方法将所有节点连接到根节点<br>
+  <body>在union方法将所有节点连接到根节点<br>
 
 <h2>quick-union<br>
   <h5>在find方法里，找到根节点<br>
