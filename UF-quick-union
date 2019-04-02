@@ -1,5 +1,5 @@
 //union-find算法
-
+//森林表示法
 public class UF {
 	private int[] id;
 	private int count;
