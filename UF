@@ -1,4 +1,4 @@
-//union-find算法-quick-find
+//union-find算法
 
 public class UF {
 	private int[] id;
