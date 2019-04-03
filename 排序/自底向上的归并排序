@@ -1,0 +1,33 @@
+public class MergeBU{
+	Comparable[] copy_a;
+	//因为数组是引用，所以不需要返回a
+	public void sort(Comparable[] a) {
+		int N = a.length;
+		copy_a = new Comparable[N];
+		for (int sz = 1; sz < a.length; sz+=sz) {
+			for (int lo = 0; lo < a.length-sz; lo+=2*sz) {
+				//lo < a.length-sz，这句判断语句的理解：
+				//hi为超出没关系，由下面的N-1做保障
+				//只要mid不超出就行，因为mid不一定要表示中间位置，可以往右偏一点
+				merge(a,lo,lo+sz-1,Math.min(lo+2*sz-1, N-1));
+			}
+		}
+	}
+	private void merge(Comparable[] a, int lo, int mid, int hi) {
+		int i = lo;
+		int j = mid+1;
+		if(lo>=hi)
+			return;
+		for (int k = 0; k < a.length; k++) {
+			if(i>mid)
+				a[k] = copy_a[j++];
+			else if(j>hi)
+			a[k] = copy_a[i++];
+			else if(copy_a[i].compareTo(copy_a[j])>0)
+				a[k] = copy_a[j++];
+			else
+				a[k] = copy_a[i++];
+		}
+	}
+	
+}
