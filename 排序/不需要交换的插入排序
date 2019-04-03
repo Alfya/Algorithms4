@@ -1,0 +1,16 @@
+public class InsertionWithoutExch {
+	public InsertionWithoutExch(Comparable[] a) {
+		//如何实现不交换？
+		//把i元素放在temp中，j指针往前移，若比temp大，往后移，比temp小，
+		//则temp把值赋给比temp小的值后面那个位置
+		for (int i = 1; i < a.length; i++) {
+			Comparable temp = i;
+			int j;
+			for (j = i-1; j >0&&a[j].compareTo(temp)<0; j++) {
+				a[j+1] = a[j];
+			}
+			a[j+1] = temp;
+		}
+	}
+}
+
