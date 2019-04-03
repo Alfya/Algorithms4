@@ -17,7 +17,7 @@ public class Merge {
 				a[k] = copy_a[j++];
 			else if(j>hi)
 				a[k] = copy_a[i++];
-			else if(copy_a[i].compareTo(j)>0)
+			else if(copy_a[i].compareTo(copy_a[j])>0)
 				a[k] = copy_a[j++];
 			else
 				a[k] = copy_a[i++];
