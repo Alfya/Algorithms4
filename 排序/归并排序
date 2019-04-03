@@ -1,0 +1,27 @@
+public class Merge {
+	public Merge(Comparable[] a) {
+		//注意左右两个子序列已经分别有序了
+		//先复制出一个辅助空间
+		int len = a.length;
+		int lo = 0;
+		int mid = len/2;
+		int hi = len-1;
+		Comparable[] copy_a = null;
+		for (int i = 0; i < a.length; i++) {
+			copy_a[i] = a[i];
+		}
+		int i = lo;
+		int j = mid;
+		for (int k = 0; k < a.length; k++) {
+			if(i>mid)
+				a[k] = copy_a[j++];
+			else if(j>hi)
+				a[k] = copy_a[i++];
+			else if(copy_a[i].compareTo(j)>0)
+				a[k] = copy_a[j++];
+			else
+				a[k] = copy_a[i++];
+		}
+	}
+
+}
