@@ -1,0 +1,38 @@
+package org.cyp.chapter2;
+
+public class Quick3way {
+	public void sort(Comparable[]a) {
+		sort(a,0,a.length);
+	}
+
+	private void sort(Comparable[] a, int lo, int hi) {
+		//将切分的和i进行比较
+		if(lo>=hi) return;
+		int lt =lo;
+		int i = lo+1;
+		int gt = hi;
+		Comparable v = a[lo];
+		while(i<=gt) {
+			boolean bo = v.compareTo(a[i])>0;
+			//如果切点值大于i指向的值，那么两者交换，并且lt，i指针向右移
+			if(bo)
+				exch(a,lt++,i++);
+      //如果切点值小于i指向的值，那么，i指向的值与gt指向的值交换，并且gt指针向左移
+      //切点值小于i指向的值，从右半部分拿出一个值与切点做比较，找到右半部分比切点值小的值！
+			else if(bo)
+			exch(a,i,gt--);
+      //如果切点值等于i指向的值，则i指针向右移，i和lt分开，一旦分开表示，lt到i之间的值相等。
+			else
+				i++;
+		}
+		sort(a,lo,lt-1);
+		sort(a,gt+1,hi);
+	}
+
+	private void exch(Comparable[] a, int i, int j) {
+		Comparable temp = a[i];
+		a[i] = a[j];
+		a[j] = temp;
+	}
+	
+}
