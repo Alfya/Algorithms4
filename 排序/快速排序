@@ -1,0 +1,52 @@
+public class QuickSort {
+	int CutOff = 7;
+	public void sort(Comparable[] a) {
+		sort(a,0,a.length-1);
+	}
+
+	private void sort(Comparable[] a, int lo, int hi) {
+		//当子数组长度小于等于CutOff时，采用插入排序
+		if(hi-lo<CutOff) {
+			Insertion(a,lo,hi);
+			return;
+		}
+		int k = partition(a,lo,hi);
+		sort(a,lo,k-1);
+		sort(a,k+1,hi);
+	}
+
+	private int partition(Comparable[] a, int lo, int hi) {
+		int i = lo;
+		int j = hi+1;
+		Comparable v = a[lo];
+		while(true) {
+			//当左边的数小于切点，则i向右移继续判断；
+			//i一定会停在比切点大的位置
+			while(a[++i].compareTo(v)<0);
+			//当右边的数大于切点，则j向左移继续判断；
+			//j一定会停在比切点小的位置
+			while(a[--j].compareTo(v)>0);
+			//那么i和j不可能相等
+			if(i>j) break;
+			Comparable temp = a[j];
+			a[j] = a[i];
+			a[i] = temp;
+		}
+		//将切点与j交换，因为此时j停在比切点小的位置
+		Comparable temp = a[j];
+		a[j] = v;
+		v = temp;
+		return j;//返回的j将数组切分，然后每一个子数组再进行快速排序
+	}
+
+	private void Insertion(Comparable[] a, int lo, int hi) {
+		for (int i = lo+1; i < hi; i++) {
+			for (int j = i; j>0&&a[j].compareTo(a[j-1])<0; j--) {
+				Comparable temp = a[j];
+				a[j] = a[j-1];
+				a[j-1] = temp;
+			}
+		}
+	}
+
+}
