@@ -1,0 +1,59 @@
+
+
+import org.hamcrest.core.CombinableMatcher;
+
+public class MergeModified {
+	//改进归并排序：
+	//1.用插入排序加快排序速度
+	//2.避免数组复制
+	int CutOff = 15;
+
+	public void sort(Comparable[] a) {
+		Comparable[] aux = a.clone();//克隆a数组
+		sort(a, aux, 0, a.length - 1);
+	}
+
+	private void sort(Comparable[] a, Comparable[] aux, int lo, int hi) {
+		//如果数组大小小于CutOff，则用插入排序
+		if (hi - lo < CutOff) {
+			Insertion(aux, lo, hi);
+			return;
+		}
+
+		int mid = (lo + hi) / 2;
+		sort(a, aux, lo, mid);
+		sort(a, aux, mid + 1, hi);
+		//此时的mid不是aux的mid，是相对子数组的mid
+		//如果在lo-hi之间aux有序了，直接将其复制给a
+		if (!(aux[mid + 1].compareTo(aux[mid]) < 0)) {
+			System.arraycopy(aux, lo, a, lo, hi - lo + 1);
+		} else
+			merge(a, aux, lo, mid, hi);
+	}
+
+	private void Insertion(Comparable[] a, int lo, int hi) {
+		for (int i = 1; i < hi; i++) {
+			for (int j = i; j > lo && a[j].compareTo(a[j - 1]) < 0; j--) {
+				//交换
+				Comparable temp = a[j];
+				a[j] = a[i];
+				a[i] = temp;
+			}
+		}
+	}
+
+	private void merge(Comparable[] a, Comparable[] aux, int lo, int mid, int hi) {
+		int i = lo;
+		int j = mid+1;
+		for (int k = lo; k < hi; k++) {
+			if(i>mid) {
+				a[k] = aux[j++];
+			}else if(j>hi) {
+				a[k] = aux[i++];
+			}else if(aux[j].compareTo(aux[i])<0)
+				a[k] = aux[j++];
+			else
+				a[k] = aux[i++];
+		}
+	}
+}
