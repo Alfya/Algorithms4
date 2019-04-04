@@ -21,13 +21,13 @@ public class QuickSort {
 		Comparable v = a[lo];
 		while(true) {
 			//当左边的数小于切点，则i向右移继续判断；
-			//i一定会停在比切点大的位置
+			//i一定会停在比切点大（或等于）的位置
 			while(a[++i].compareTo(v)<0);
 			//当右边的数大于切点，则j向左移继续判断；
-			//j一定会停在比切点小的位置
+			//j一定会停在比切点小（或等于）的位置
 			while(a[--j].compareTo(v)>0);
-			//那么i和j不可能相等
-			if(i>j) break;
+			//那么i和j相等，此时a[i]=a[j]
+			if(i>=j) break;
 			Comparable temp = a[j];
 			a[j] = a[i];
 			a[i] = temp;
