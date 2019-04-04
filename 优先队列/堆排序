@@ -1,0 +1,36 @@
+package org.cyp.chapter2;
+
+public class Sort{
+	public Sort(Comparable[] a) {
+		int N = a.length;
+		
+		//生成堆有序
+		for (int i = N/2; i >0; i--) {
+			sink(a,i,N);
+		}
+		//将最大值一个个从堆中删去，sink保持堆有序
+		while(N>1) {
+			exch(a,1,N--);//可以获得最大值输出
+			sink(a,1,N);
+		}
+	}
+	private void exch(Comparable[] a, int i, int j) {
+		Comparable temp = a[j];
+		a[j] = a[i];
+		a[i] = temp;
+	}
+
+	private void sink(Comparable[] a, int i, int n) {
+		
+		while(i<=n/2) {
+			int j = 2*i;
+			if(j<n&&a[j].compareTo(a[j+1])<0)
+				j++;
+			if(!(a[i].compareTo(a[j])<0))
+				break;
+			exch(a,i,j);
+			i = j;
+		}
+		
+	}
+}
