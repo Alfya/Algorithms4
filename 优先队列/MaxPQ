@@ -1,0 +1,58 @@
+//优先级问题
+public class MaxPQ<Key extends Comparable<Key>> {
+	//每个父节点会连有1-2个比父节点要小的子节点
+	//但是同级别的子节点大小并不知道
+	private Key[] pq;
+	int N = 0;
+	public MaxPQ() {
+		
+	}
+	public MaxPQ(int maxN) {
+		pq = (Key[]) new Comparable[maxN+1];
+	}
+	public void Insert(Key v) {
+		pq[++N] = v;//在最底下放入新来的元素
+		swim(N);//将新元素上浮
+	}
+	public Key delMax() {
+		Key max = pq[1];//pq位置不使用！
+		exch(1,N--);//把最大值放在最后面，最底下的元素放在最上面，并缩小数组
+		pq[N+1] = null;//删去最大元素，避免游离
+		sink(1);//下沉，将刚放入最大元素位置的元素进行下沉操作
+		return max;
+	}
+	private void sink(int i) {
+		while(i<=N/2) {
+			int j = 2*i;//其中的子节点
+			
+			if(j<N&&less(j,j+1))
+				j++;//但是同级别的子节点大小并不知道,得到同级别的最大
+			
+			if(!less(i,j))
+			break;//如果父节点不比子节点小，则停在下沉
+			exch(i,j);//否则下沉
+			i = j;
+		}
+	}
+	
+	private void swim(int i) {
+		while(i>1&&less(i/2,i)) {
+			exch(i/2,i);
+			i = i/2;
+		}
+	}
+	public boolean isEmpty() {
+		return N==0;
+	}
+	public int Size() {
+		return N;
+	}
+	private void exch(int i, int j) {
+		Key temp = pq[j];
+		pq[j] = pq[i];
+		pq[i] = temp;
+	}
+	private boolean less(int i, int j) {
+		return pq[i].compareTo(pq[j])<0;
+	}
+}
