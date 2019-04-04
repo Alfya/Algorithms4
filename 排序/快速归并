@@ -1,0 +1,40 @@
+public class Merge2 {
+//1.实现辅助空间不是静态数组，作为sort的传递参数
+//2. 实现去掉内循环检测某半边是否用尽
+	public void sort(Comparable[] a) {
+		int N = a.length;
+		int mid = a.length/2;
+		Comparable[] aux = new Comparable[N];
+		//aux辅助空间，前半部分为升序，后半部分为降序，i，j（最右最左指针）向中间移动
+		for (int i = 0; i <mid; i++) {
+			aux[i] = a[i];
+		}
+		for (int i = mid; i <N; i++) {
+			aux[i] = a[N+mid-i-1];
+		}
+		sort(a,aux,0,a.length);
+	}
+
+	private void sort(Comparable[] a, Comparable[] aux, int lo, int hi) {
+		if(lo>=hi)
+			return;
+		int mid = (lo+hi)/2;
+		sort(a,aux,lo,mid);
+		sort(a,aux,mid+1,hi);
+		merge(a,aux,lo,mid,hi);
+		
+		
+	}
+
+	private void merge(Comparable[] a,Comparable[] aux, int lo, int mid, int hi) {
+		int i = lo;
+		int j = hi;
+		for (int k = lo; k < hi; k++) {
+			if(aux[j].compareTo(aux[i])<0)
+				a[k] = aux[j--];
+			else
+				a[k] = aux[i++];
+		}
+	}
+	
+}
