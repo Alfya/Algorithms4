@@ -44,7 +44,7 @@ public class BST <Key extends Comparable<Key>, Value>{
 	}
 	private Node put(Node x, Key key, Value val) {
 		if(x==null)
-			return new Node(key,val,1);
+			return new Node(key,val,1);//完成了insert方法
 		else {
 			int cmp = key.compareTo(x.key);
 			if(cmp>0)
@@ -56,32 +56,7 @@ public class BST <Key extends Comparable<Key>, Value>{
 			return x;
 		}
 	}
-	public void insert(Key key, Value val) {
-		root = insert(root,key,val);
-	}
-
-	private Node insert(Node x, Key key, Value val) {
-		//不考虑i==0
-		if(x==null)
-			return new Node(key,val,1);
-		int i = key.compareTo(x.key);
-		if(i<0) {
-			if(x.left!=null)
-				x.left = insert(x.left,key,val);
-			else
-				x.left = new Node(key,val,1);
-				return x.left;
-		}
-		if(i>0) {
-			if(x.right!=null)
-				x.right = insert(x.right,key,val);
-			else
-				x.right = new Node(key,val,1);
-			return x.right;
-		}
-		x.N++;
-		return x;
-	}
+	
 	public Key min() {
 		return min(root).key;
 	}
