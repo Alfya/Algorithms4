@@ -1,0 +1,375 @@
+package org.cyp.chapter3;
+
+public class RedBlackBST<Key extends Comparable<Key>, Value> {
+	private static final boolean RED = true;
+	private static final boolean BLACK = false;
+	private Node root;
+
+	private class Node {
+		private Key key;
+		private Value val;
+		private int N;
+		private boolean color;
+		private Node left;
+		private Node right;
+
+		Node(Key key, Value val, int N, boolean color) {
+			this.key = key;
+			this.val = val;
+			this.N = N;
+			this.color = color;
+		}
+	}
+
+	private boolean isRed(Node x) {
+		if (x == null)
+			return false;
+		return x.color == RED;
+	}
+
+	public int size() {
+		return size(root);
+	}
+
+	private int size(Node x) {
+		return x == null ? 0 : x.N;
+	}
+
+	private Node rotateLeft(Node h) {
+		Node x = h.right;
+		h.right = x.left;
+		x.left = h;
+		x.color = h.color;
+		h.color = RED;
+		x.N = h.N;//x代替了h的位置，节点数没有改变；
+		h.N = size(h.left) + size(h.right) + 1;
+		return x;
+	}
+
+	private Node rotateRight(Node h) {
+		Node x = h.left;
+		h.left = x.right;
+		x.right = h;
+		x.color = h.color;
+		h.color = RED;
+		x.N = h.N;
+		h.N = size(x.left) + size(x.right) + 1;
+		return x;
+	}
+
+	//当3-节点插入新键，变成4-节点，
+	//4-节点分裂成2-节点，
+	//4-节点的中间键上升与原来的父节点用红链接相连
+	private void flipColors(Node h) {
+		h.color = !h.color;
+		h.left.color = !h.left.color;
+		h.right.color = !h.right.color;
+	}
+
+	public void put(Key key, Value val) {
+		root = put(root, key, val);
+		root.color = BLACK;//根结点总是黑色
+	}
+
+	private Node put(Node h, Key key, Value val) {
+		if (h == null)
+			//规定：新加入的节点的链接都是红色的
+			return new Node(key, val, 1, RED);
+		int cmp = key.compareTo(h.key);
+		if (cmp > 0)
+			return put(h.right, key, val);
+		else if (cmp < 0)
+			return put(h.left, key, val);
+		else
+			h.val = val;//树中存在该键
+		return balance(h);
+	}
+
+	public Value get(Key key) {
+		return get(root, key);
+	}
+
+	private Value get(Node h, Key key) {
+		if (h == null)
+			return null;
+		int cmp = key.compareTo(h.key);
+		if (cmp > 0)
+			return get(h.right, key);
+		else if (cmp < 0)
+			return get(h.left, key);
+		else
+			return h.val;
+	}
+
+	public Key max() {
+		return max(root).key;
+	}
+
+	private Node max(Node h) {
+		if (h.right == null)
+			return h;
+		return h.right;
+	}
+
+	public Key min() {
+		return min(root).key;
+	}
+
+	private Node min(Node h) {
+		if (h.left == null)
+			return h;
+		return h.left;
+	}
+
+	public Key floor(Key key) {
+		Node x = floor(root, key);
+		if (x == null)
+			return null;
+		return x.key;
+	}
+
+	//<=key的最大值
+	private Node floor(Node x, Key key) {
+		if (x == null)
+			return null;
+		int cmp = key.compareTo(x.key);
+		//=的时候
+		if (cmp == 0)
+			return x;
+		//此时key小于当前树结点，
+		//要向该结点的左边寻找比该结点更小的树
+		//来满足<=key
+		if (cmp < 0)
+			return floor(x.left, key);
+		Node t = floor(x.right, key);
+		if (t != null)
+			return t;
+		else
+			return x;
+	}
+
+	//>=key的最小值
+	public Key ceiling(Key key) {
+		Node x = ceiling(root, key);
+		if (x == null)
+			return null;
+		return x.key;
+	}
+
+	private Node ceiling(Node x, Key key) {
+		if (x == null)
+			return null;
+		int cmp = key.compareTo(x.key);
+		//=的时候
+		if (cmp == 0)
+			return x;
+		//此时key大于当前树结点，
+		//要向该结点的右边寻找比该结点更大的树
+		//来满足>=key
+		if (cmp > 0)
+			return ceiling(x.right, key);
+		Node t = ceiling(x.left, key);
+		if (t != null)
+			return t;
+		else
+			return x;
+	}
+
+	//选择排名第k位的键
+	public Key select(int k) {
+		return select(root, k).key;
+	}
+
+	private Node select(Node x, int k) {
+		if (x == null)
+			return null;
+		int t = size(x.left);
+		if (t > k)
+			return select(x.left, k);
+		else if (k < t)
+			return select(x.right, k - t - 1);
+		else
+			return x;
+	}
+
+	public int rank(Key key) {
+		return rank(root, key);
+	}
+
+	private int rank(Node x, Key key) {
+		if (x == null)
+			return 0;
+		int cmp = key.compareTo(x.key);
+		if (cmp > 0)
+			return rank(x.right, key) + size(x.left) + 1;
+		else if (cmp < 0)
+			return rank(x.left, key);
+		else
+			return size(x.left);
+	}
+
+	private boolean is23() {
+		return is23(root);
+	}
+
+	private boolean is23(Node x) {
+		if (x == null)
+			return true;
+		//这个包括右红链接和左右都是红链接
+		if (isRed(x.right))
+			return false;
+		return is23(x.left) && is23(x.right);
+	}
+
+	private boolean isBalanced() {
+		int blackNum = 0;
+		//先找出到根结点的黑链接的数量
+		for (Node x = root; x != null; x = x.left) {
+			if (!isRed(x))
+				blackNum++;
+		}
+		return isBalanced(root, blackNum);
+	}
+
+	private boolean isBalanced(Node x, int blackNum) {
+		if (x == null)
+			//到达空链接，blackNum是否变为0，如果变为0，则黑链接数量一样
+			return blackNum == 0;
+		if (!isRed(x))
+			blackNum--;
+		return isBalanced(x.left, blackNum) && isBalanced(x.right, blackNum);
+	}
+
+	private boolean isBST() {
+		return isBST(root, null, null);
+	}
+
+	private boolean isBST(Node x, Key min, Key max) {
+		if (x == null)
+			return true;
+		if (min != null && min.compareTo(x.key) >= 0)
+			return false;
+		if (max != null && max.compareTo(x.key) <= 0) {
+			return false;
+		}
+		return isBST(x.left, min, x.key) && isBST(x.right, x.key, max);
+	}
+
+	private boolean is23BST() {
+		//1.满足是否为二叉查找树
+		//2.是否为2-结点和3-结点
+		//3.空链接到根结点的距离是否一样
+		return is23() && isBalanced() && isBST();
+	}
+	//删除最小键，
+	//如果含有最小键的节点是3节点或4节点，那么直接删除该节点，不会破坏树的平衡性；
+	//但是如果是2节点，由于删除后变为空节点，有可能会破坏平衡性，
+	//故删除最小键的思路是沿左链接向下进行变换，确保当前节点不是2节点。
+
+	private Node moveRedLeft(Node h) {
+		/*
+		 * https://cloud.tencent.com/developer/article/1193097
+		 * 见链接
+		 */
+		flipColors(h);
+		if (isRed(h.right.left)) {
+			h.right = rotateRight(h.right);
+			h = rotateLeft(h);
+			flipColors(h);
+		}
+		return h;
+	}
+
+	public void deleteMin() {
+		if (!isRed(root.left) && !isRed(root.right))
+			root.color = RED;
+		root = deleteMin(root);
+		if (root != null)
+			root.color = BLACK;
+	}
+
+	private Node deleteMin(Node h) {
+		if (h.left == null)
+			return null;
+		if (!isRed(h.left) && !isRed(h.left.left))
+			h = moveRedLeft(h);
+		h.left = deleteMin(h.left);
+		return balance(h);//删除结点后，平衡这棵树
+	}
+
+	private Node balance(Node h) {
+		if (isRed(h.left) && isRed(h.left.left))
+			h = rotateRight(h);
+		if (isRed(h.left) && isRed(h.right))
+			flipColors(h);
+		if (isRed(h.right) && !isRed(h.left))
+			h = rotateLeft(h);
+		return h;
+	}
+
+	private Node moveRedRight(Node h) {
+		flipColors(h);
+		if (isRed(h.left.left)) {
+			h = rotateRight(h);
+			flipColors(h);
+		}
+		return h;
+	}
+
+	public void deleteMax() {
+		if (!isRed(root.right) && !isRed(root.left))
+			root.color = RED;
+		root = deleteMax(root);
+		root.color = BLACK;
+	}
+
+	private Node deleteMax(Node h) {
+		if (isRed(h.left))
+			h = rotateRight(h);
+		if (h.right == null)
+			return null;
+		if (!isRed(h.right) && !isRed(h.right.left))
+			h = moveRedRight(h);
+		h.right = deleteMax(h.right);
+		return balance(h);
+	}
+	//删除任意结点，在3-结点和4-结点中，直接删除
+	//若是2-结点，则得到右子树的最小结点来进行覆盖
+	public void delete(Key key) {
+		if (!isRed(root.right) && !isRed(root.left))
+			root.color = RED;
+		root = delete(root, key);
+		if (root != null)
+			root.color = BLACK;
+	}
+
+	private Node delete(Node h, Key key) {
+		int cmp = key.compareTo(h.key);
+		if(cmp<0) {
+			if(!isRed(h.left)&&!isRed(h.left.left)) 
+				h = moveRedLeft(h);
+			h.left = delete(h.left,key);
+		}
+		else {
+			if(isRed(h.left))
+				h = rotateRight(h);
+			//刚好key在最底层
+			if(cmp==0&&h.right==null)
+				return null;
+			if(!isRed(h.right)&&!isRed(h.right.left))
+				h = moveRedRight(h);
+			if(cmp==0) {
+				//将右子树的最小结点来覆盖要删除的当前结点
+				h.key = min(h.right).key;
+				h.val = get(h.right,h.key);
+				//删除右子树的最小结点
+				h.right = deleteMin(h.right);
+			}
+			else
+				h.right = delete(h.right,key);
+		}
+		return balance(h);
+	}
+	
+
+}
